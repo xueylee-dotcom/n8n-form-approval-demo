@@ -1,0 +1,7 @@
+[
+  {"case":"new_submission_approved","submission_id":"submission-001","email":"person1@example.test","name":"Synthetic Person 1","scripted_decision":"approve"},
+  {"case":"identical_replay","submission_id":"submission-001","email":"person1@example.test","name":"Synthetic Person 1","scripted_decision":null},
+  {"case":"rejected_no_write","submission_id":"submission-002","email":"person2@example.test","name":"Synthetic Person 2","scripted_decision":"reject"},
+  {"case":"invalid_field_rejected","submission_id":"invalid id","email":"invalid-case@example.test","name":"Synthetic Invalid ID","scripted_decision":null},
+  {"case":"same_id_changed_content","submission_id":"submission-001","email":"person1@example.test","name":"Changed Synthetic Name","scripted_decision":null}
+]

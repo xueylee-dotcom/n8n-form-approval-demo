@@ -1,0 +1,80 @@
+{
+  "started_at": "2026-10-14T01:08:39.256433+00:00",
+  "steps": [
+    {
+      "name": "clean-install",
+      "exit_code": 0
+    },
+    {
+      "name": "sqlite-prebuild",
+      "exit_code": 0
+    },
+    {
+      "name": "native-check",
+      "exit_code": 0
+    },
+    {
+      "name": "contract-run",
+      "exit_code": 0
+    }
+  ],
+  "method": "clean temporary directory, locked npm ci, no baseline node_modules copied or linked",
+  "result": "PASS",
+  "contract_checks": 6,
+  "execution_count": 5,
+  "completed_at": "2026-10-14T01:16:23.682253+00:00",
+  "environment": {
+    "os": "macOS",
+    "arch": "ARM64",
+    "node": "22.22.0",
+    "npm": "10.9.4",
+    "python": "3.12.3",
+    "n8n": "2.35.7"
+  },
+  "workflow_sha256": "abc07451c8dd5a4c66d3d5f8aa578df345d7db84f273c75e8817ab21684a9c6e",
+  "credential_count": 0,
+  "users_with_password": 0,
+  "engine_exit_code": 0,
+  "checks": [
+    {
+      "contract": "pending_no_write",
+      "n8n_status": "waiting",
+      "expected": "0 contacts; 0 commit calls",
+      "result": "PASS"
+    },
+    {
+      "contract": "new_submission_approved",
+      "n8n_status": "success",
+      "expected": "1 contact; 1 write",
+      "result": "PASS"
+    },
+    {
+      "contract": "identical_replay",
+      "n8n_status": "success",
+      "expected": "no additional record/write/approval",
+      "result": "PASS"
+    },
+    {
+      "contract": "rejected_no_write",
+      "n8n_status": "success",
+      "expected": "0 additional CRM writes",
+      "result": "PASS"
+    },
+    {
+      "contract": "invalid_field_rejected",
+      "n8n_status": "error",
+      "expected": "400 at Reserve; no reservation or CRM write",
+      "result": "PASS"
+    },
+    {
+      "contract": "same_id_changed_content",
+      "n8n_status": "error",
+      "expected": "409; manual review required; existing data unchanged",
+      "result": "PASS"
+    }
+  ],
+  "scope": "Sequential local synthetic example.test; scripted approvals; not Cloud, production, concurrency or real CRM validation.",
+  "clean_install_staging_removed": true,
+  "runtime_temporary_data_removed": true,
+  "ports_refused_after_shutdown": true
+}

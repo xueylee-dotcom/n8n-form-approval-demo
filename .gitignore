@@ -1,0 +1,5 @@
+n8n-local/node_modules/
+.install-cache/
+**/__pycache__/
+evidence/contracts-v3/
+*.sqlite*

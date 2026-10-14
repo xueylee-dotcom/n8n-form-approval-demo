@@ -1,0 +1,362 @@
+{
+  "id": "LocalCrmDemo0001",
+  "name": "LOCAL ONLY - Form to approved synthetic CRM - UNTESTED n8n candidate",
+  "active": false,
+  "nodes": [
+    {
+      "id": "ed538522-cb15-5559-929c-5fa9de7a86c2",
+      "name": "Synthetic Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "formTitle": "Synthetic CRM request",
+        "formDescription": "Local demo only. Use example.test addresses. Repeat submission_id to test duplicates.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "submission_id",
+              "fieldType": "text",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "name",
+              "fieldType": "text",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "webhookId": "61f25ad1-0e8f-5340-b8c9-91109e310fad"
+    },
+    {
+      "id": "8d389b55-a14d-561b-b08d-101a1655466a",
+      "name": "Reserve",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8765/reserve",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({request_id: $json.submission_id, email: $json.email, name: $json.name, owner: String($execution.id)}) }}",
+        "options": {
+          "timeout": 2000
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "notes": "Local synthetic adapter only. HTTP 504 injection is not a real network timeout. Stop on error after 3 total attempts."
+    },
+    {
+      "id": "2f572dd5-ba1a-5bd2-a1ae-b8916f2f3cf4",
+      "name": "Needs human review",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5bac7739-3455-5b39-8644-eb112489ee42",
+              "leftValue": "={{ $json.should_review }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "e295733b-abb2-575b-b247-abf398595d46",
+      "name": "Review context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "resume",
+              "name": "resume_url",
+              "value": "={{ $execution.resumeUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "request",
+              "name": "submission_id",
+              "value": "={{ $json.request_id }}",
+              "type": "string"
+            },
+            {
+              "id": "email",
+              "name": "email",
+              "value": "={{ $(\"Synthetic Form\").first().json.email }}",
+              "type": "string"
+            },
+            {
+              "id": "name",
+              "name": "name",
+              "value": "={{ $(\"Synthetic Form\").first().json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "notes": "Reviewer-only execution output. Keep resume_url private in this local demo."
+    },
+    {
+      "id": "0273b62a-16ff-5553-9250-a3cce7dcd8e0",
+      "name": "Human approval",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "webhookId": "afd7085f-e336-5668-9c6c-d22d51410fbb",
+      "notes": "LOCAL ONLY: no identity auth. Operator obtains execution resumeUrl and POSTs {\"decision\":\"approve\" or \"reject\",\"reviewer\":\"human-demo\"}. Do not share URL with submitter. No automatic approval or expiry. Pending recovery UNTESTED."
+    },
+    {
+      "id": "edbf3681-9546-51a2-a7ae-7da570730ada",
+      "name": "Record decision",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8765/decide",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({request_id: $(\"Reserve\").first().json.request_id, owner: $(\"Reserve\").first().json.owner, decision: $json.body.decision, reviewer: $json.body.reviewer}) }}",
+        "options": {
+          "timeout": 2000
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "notes": "Local synthetic adapter only. HTTP 504 injection is not a real network timeout. Stop on error after 3 total attempts."
+    },
+    {
+      "id": "a8939121-02af-5517-9aa8-b581eb7acf78",
+      "name": "Approved",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4510321d-903c-5ad1-a722-515dec687cbe",
+              "leftValue": "={{ $json.approved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "aca4e8c8-2566-5010-9be5-4e6fba1cb8a9",
+      "name": "Commit CRM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8765/commit",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({request_id: $json.request_id, owner: $json.owner}) }}",
+        "options": {
+          "timeout": 2000
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1000,
+      "notes": "Local synthetic adapter only. HTTP 504 injection is not a real network timeout. Stop on error after 3 total attempts."
+    },
+    {
+      "id": "25d305a6-1e60-5c2a-8632-9ca029e8d22f",
+      "name": "Duplicate stopped",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        720,
+        560
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "a8fd6ff3-7f7e-5595-ad5f-38670a54655e",
+      "name": "Rejected stopped",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1440,
+        560
+      ],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Synthetic Form": {
+      "main": [
+        [
+          {
+            "node": "Reserve",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reserve": {
+      "main": [
+        [
+          {
+            "node": "Needs human review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs human review": {
+      "main": [
+        [
+          {
+            "node": "Review context",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Duplicate stopped",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Review context": {
+      "main": [
+        [
+          {
+            "node": "Human approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human approval": {
+      "main": [
+        [
+          {
+            "node": "Record decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record decision": {
+      "main": [
+        [
+          {
+            "node": "Approved",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Approved": {
+      "main": [
+        [
+          {
+            "node": "Commit CRM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rejected stopped",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}

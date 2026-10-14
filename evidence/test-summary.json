@@ -1,0 +1,58 @@
+{
+  "started_at": "2026-10-14T00:46:04.557327+00:00",
+  "completed_at": "2026-10-14T00:46:20.117566+00:00",
+  "n8n_version": "2.35.7",
+  "scope": "sequential local synthetic example.test; scripted decisions",
+  "workflow_sha256": "abc07451c8dd5a4c66d3d5f8aa578df345d7db84f273c75e8817ab21684a9c6e",
+  "execution_count": 5,
+  "credential_count": 0,
+  "users_with_password": 0,
+  "result": "PASS",
+  "engine_exit_code": 0,
+  "temporary_data_removed": true,
+  "checks": [
+    {
+      "contract": "pending_no_write",
+      "execution_id": "1",
+      "n8n_status": "waiting",
+      "expected": "0 contacts; 0 commit calls",
+      "result": "PASS"
+    },
+    {
+      "contract": "new_submission_approved",
+      "execution_id": "1",
+      "n8n_status": "success",
+      "expected": "1 contact; 1 write",
+      "result": "PASS"
+    },
+    {
+      "contract": "identical_replay",
+      "execution_id": "2",
+      "n8n_status": "success",
+      "expected": "no additional record/write/approval",
+      "result": "PASS"
+    },
+    {
+      "contract": "rejected_no_write",
+      "execution_id": "3",
+      "n8n_status": "success",
+      "expected": "0 additional CRM writes",
+      "result": "PASS"
+    },
+    {
+      "contract": "invalid_field_rejected",
+      "execution_id": "4",
+      "n8n_status": "error",
+      "expected": "400 at Reserve; no reservation or CRM write",
+      "result": "PASS"
+    },
+    {
+      "contract": "same_id_changed_content",
+      "execution_id": "5",
+      "n8n_status": "error",
+      "expected": "409; manual review required; existing data unchanged",
+      "result": "PASS"
+    }
+  ],
+  "reviewer_note": "Automated synthetic decisions; not authenticated human review."
+}

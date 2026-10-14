@@ -1,0 +1,87 @@
+{
+  "result": "PASS",
+  "scope": "Targeted filename/text and workflow packaging checks; not a comprehensive dependency security or licensing audit.",
+  "workflow_credential_references": 0,
+  "forbidden_runtime_artifacts": 0,
+  "license_applied": true,
+  "author": "Evan Reed",
+  "files": [
+    {
+      "file": ".gitignore",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "LICENSE",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "README.md",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "THIRD-PARTY-NOTICES.md",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "VERIFICATION.md",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "evidence/clean-install-summary.json",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "evidence/test-summary.json",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "fixtures/submissions.json",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "n8n-local/package-lock.json",
+      "result": "PASS",
+      "metadata_exceptions": [
+        "public upstream maintainer email in deprecation metadata"
+      ]
+    },
+    {
+      "file": "n8n-local/package.json",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "scripts/mock_crm.py",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "scripts/n8n_contract_test.py",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "scripts/n8n_engine_test.py",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "scripts/n8n_probe.py",
+      "result": "PASS",
+      "metadata_exceptions": []
+    },
+    {
+      "file": "workflow/form-to-crm.json",
+      "result": "PASS",
+      "metadata_exceptions": []
+    }
+  ]
+}
